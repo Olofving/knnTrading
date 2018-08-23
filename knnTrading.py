@@ -51,6 +51,13 @@ knn = KNeighborsClassifier(n_neighbors=k)
 #Fit the model
 knn.fit(Xtrain,Ytrain)
 
+#Accuracy Score
+accuracytrain = accuracy_score(Ytrain, knn.predict(Xtrain))
+accuracytest = accuracy_score(Ytest,knn.predict(Xtest))
+
+
+
+
 
 
 
