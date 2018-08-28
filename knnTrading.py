@@ -12,12 +12,13 @@ from sklearn.metrics import accuracy_score
 
 #Data fetching
 from pandas_datareader import data as pandadr
-#import fix_yahoo_finance as yahoofinance
+import fix_yahoo_finance as yf
 
 
-#Script
+##Script
+
 #Read the data from Yahoo Finance
-df = pandadr.get_data_yahoo('SPY', '2012-01-01', '2018-01-01')
+df = pandadr.get_data_yahoo('SPY', '2010-01-01', '2013-01-01')
 
 df = df.dropna() #Droping NA-values
 df = df[['Open', 'High', 'Low', 'Close']]
@@ -55,9 +56,26 @@ knn.fit(Xtrain,Ytrain)
 accuracytrain = accuracy_score(Ytrain, knn.predict(Xtrain))
 accuracytest = accuracy_score(Ytest,knn.predict(Xtest))
 
+##Trading strategy
 
+#Predicted signal
+df['Predicted_Signal'] = knn.predict(X)
 
+#SPY cumulative returns
+df['SPY_Returns'] = np.log(df['Close']/df['Close'].shift(1))
+Cumulative_SPY_Returns = df[split:]['SPY_Returns'].cumsum()*100
 
+#Cumulative Strategy Returns
+df['Strategy_Returns'] = df['SPY_Returns']*df['Predicted_Signal'].shift(1)
+Cumulative_Strategy_Returns = df[split:]['Strategy_Returns'].cumsum()*100
+
+##Plots
+plt.figure(figsize=(20,10))
+plt.plot(Cumulative_SPY_Returns, color = 'r', label = 'SPY Returns')
+plt.plot(Cumulative_Strategy_Returns, color = 'b', label = 'Strategy Returns')
+plt.title(str(k))
+plt.legend()
+plt.show()
 
 
 
