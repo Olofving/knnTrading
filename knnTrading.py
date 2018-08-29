@@ -12,7 +12,7 @@ from sklearn.metrics import accuracy_score
 
 #Data fetching
 from pandas_datareader import data as pandadr
-import fix_yahoo_finance as yf
+#import fix_yahoo_finance as yf
 
 
 ##Script
